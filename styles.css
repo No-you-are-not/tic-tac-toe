@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: lightpink;
+}
+
+.game-container {
+    text-align: center;
+}
+
+.instruction-container {
+    font-size: 40px;
+    color: white;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+canvas {
+    border: 1px solid palevioletred;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    background-color: white;
+    color: palevioletred;
+    font-weight: 600;
+    margin-bottom: 20px;
+}

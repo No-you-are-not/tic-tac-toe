@@ -6,9 +6,9 @@ const resetButton = document.getElementById("reset");
 const instruction = document.getElementById("instruction");
 const videoPlayer = document.getElementById('videoPlayer');
 
-const adDisplayContainer = new google.ima.AdDisplayContainer(videoPlayer);
-const adsLoader = new google.ima.AdsLoader(adDisplayContainer);
-let adsManager;
+// const adDisplayContainer = new google.ima.AdDisplayContainer(videoPlayer);
+// const adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+// let adsManager;
 
 let board = Array(9).fill(null);
 let currentPlayer = null;
@@ -28,26 +28,26 @@ const winningConditions = [
 ];
 
 canvas.addEventListener("click", handleCanvasClick);
-resetButton.addEventListener("click", resetGame);
+resetButton.addEventListener("click", startGame);
 document.addEventListener("keydown", handleKeydown);
 
-adsLoader.addEventListener(
-    google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-    onAdsManagerLoaded,
-    false
-);
+// adsLoader.addEventListener(
+//     google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+//     onAdsManagerLoaded,
+//     false
+// );
+//
+// adsLoader.addEventListener(
+//     google.ima.AdErrorEvent.Type.AD_ERROR,
+//     onAdError,
+//     false
+// );
 
-adsLoader.addEventListener(
-    google.ima.AdErrorEvent.Type.AD_ERROR,
-    onAdError,
-    false
-);
-
-function requestAds() {
-    const adsRequest = new google.ima.AdsRequest();
-    adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=';
-    adsLoader.requestAds(adsRequest);
-}
+// function requestAds() {
+//     const adsRequest = new google.ima.AdsRequest();
+//     adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=';
+//     adsLoader.requestAds(adsRequest);
+// }
 
 function onAdsManagerLoaded(adsManagerLoadedEvent) {
     adsManager = adsManagerLoadedEvent.getAdsManager(videoPlayer);
@@ -75,22 +75,22 @@ function onAdsManagerLoaded(adsManagerLoadedEvent) {
     }
 }
 
-function onAdError(adErrorEvent) {
-    console.log(adErrorEvent.getError());
-    if (adsManager) {
-        adsManager.destroy();
-    }
-    videoPlayer.play();
-}
+// function onAdError(adErrorEvent) {
+//     console.log(adErrorEvent.getError());
+//     if (adsManager) {
+//         adsManager.destroy();
+//     }
+//     videoPlayer.play();
+// }
 
-function onContentPauseRequested() {
-    videoPlayer.pause();
-}
+// function onContentPauseRequested() {
+//     videoPlayer.pause();
+// }
 
-function onContentResumeRequested() {
-    videoPlayer.play();
-    startGame();
-}
+// function onContentResumeRequested() {
+//     videoPlayer.play();
+//     startGame();
+// }
 
 function showAdBeforeReset() {
     requestAds();
@@ -197,7 +197,8 @@ function checkResult() {
 }
 
 function resetGame() {
-    showAdBeforeReset();
+    startGame()
+    //showAdBeforeReset();
 }
 
 function startGame() {
@@ -245,4 +246,8 @@ function handleKeydown(event) {
     drawBoard();
 }
 
-startGame();
+drawBoard();
+if (currentPlayer === "O") {
+    setTimeout(computerMove, 500);
+    instruction.innerText = "Your opponent is playing first";
+}

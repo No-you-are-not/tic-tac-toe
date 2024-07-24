@@ -1,14 +1,12 @@
-
+// script.js
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
+const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
 const instruction = document.getElementById("instruction");
-const videoPlayer = document.getElementById('videoPlayer');
-
-// const adDisplayContainer = new google.ima.AdDisplayContainer(videoPlayer);
-// const adsLoader = new google.ima.AdsLoader(adDisplayContainer);
-// let adsManager;
+const modal = document.getElementById("modal");
+const result = document.getElementById("result");
 
 let board = Array(9).fill(null);
 let currentPlayer = null;
@@ -28,73 +26,9 @@ const winningConditions = [
 ];
 
 canvas.addEventListener("click", handleCanvasClick);
-resetButton.addEventListener("click", startGame);
+startButton.addEventListener("click", startGame);
+resetButton.addEventListener("click", resetGame);
 document.addEventListener("keydown", handleKeydown);
-
-// adsLoader.addEventListener(
-//     google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-//     onAdsManagerLoaded,
-//     false
-// );
-//
-// adsLoader.addEventListener(
-//     google.ima.AdErrorEvent.Type.AD_ERROR,
-//     onAdError,
-//     false
-// );
-
-// function requestAds() {
-//     const adsRequest = new google.ima.AdsRequest();
-//     adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=';
-//     adsLoader.requestAds(adsRequest);
-// }
-
-function onAdsManagerLoaded(adsManagerLoadedEvent) {
-    adsManager = adsManagerLoadedEvent.getAdsManager(videoPlayer);
-    adsManager.addEventListener(
-        google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-        onContentPauseRequested,
-        false
-    );
-    adsManager.addEventListener(
-        google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED,
-        onContentResumeRequested,
-        false
-    );
-    adsManager.addEventListener(
-        google.ima.AdErrorEvent.Type.AD_ERROR,
-        onAdError,
-        false
-    );
-
-    try {
-        adsManager.init(640, 360, google.ima.ViewMode.NORMAL);
-        adsManager.start();
-    } catch (adError) {
-        videoPlayer.play();
-    }
-}
-
-// function onAdError(adErrorEvent) {
-//     console.log(adErrorEvent.getError());
-//     if (adsManager) {
-//         adsManager.destroy();
-//     }
-//     videoPlayer.play();
-// }
-
-// function onContentPauseRequested() {
-//     videoPlayer.pause();
-// }
-
-// function onContentResumeRequested() {
-//     videoPlayer.play();
-//     startGame();
-// }
-
-function showAdBeforeReset() {
-    requestAds();
-}
 
 function drawBoard() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -185,20 +119,17 @@ function checkResult() {
 
     if (roundWon) {
         gameActive = false;
-        instruction.innerText = `Player ${currentPlayer} wins!`;
+        result.innerText = `Player ${currentPlayer} wins!`;
+        showModal();
         return;
     }
 
     if (!board.includes(null)) {
         gameActive = false;
-        instruction.innerText = "It's a draw!";
+        result.innerText = "It's a draw!";
+        showModal();
         return;
     }
-}
-
-function resetGame() {
-    startGame()
-    //showAdBeforeReset();
 }
 
 function startGame() {
@@ -207,12 +138,16 @@ function startGame() {
     gameActive = true;
     currentCell = 0;
     drawBoard();
+    startButton.style.display = "none";
+    instruction.innerText = currentPlayer === "O" ? "Your opponent is playing first" : "You are playing first, click on the field to start";
     if (currentPlayer === "O") {
         setTimeout(computerMove, 500);
-        instruction.innerText = "Your opponent is playing first";
-    } else {
-        instruction.innerText = "You are playing first, click on the field to start";
     }
+}
+
+function resetGame() {
+    modal.style.display = "none";
+    startGame();
 }
 
 function handleKeydown(event) {
@@ -246,8 +181,8 @@ function handleKeydown(event) {
     drawBoard();
 }
 
-drawBoard();
-if (currentPlayer === "O") {
-    setTimeout(computerMove, 500);
-    instruction.innerText = "Your opponent is playing first";
+function showModal() {
+    modal.style.display = "block";
 }
+
+drawBoard();
